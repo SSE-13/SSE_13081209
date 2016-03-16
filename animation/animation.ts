@@ -11,6 +11,8 @@ const BOUNDS_RIGHT = 400;
 
 const BOUNCE = 0.95;
 
+const FRICTION = 0.5;
+
 /**
  * 计时器系统
  */
@@ -60,15 +62,27 @@ class Body {
     public onTicker(duringTime) {
 
         this.vy += duringTime * GRAVITY;
-        this.x += duringTime * this.vx;
         this.y += duringTime * this.vy;
+               
         
+       
+        this.x += duringTime * this.vx;
         
+       
 
+        
         //反弹
         if (this.y + this.height > BOUNDS_BOTTOM) {
+            
             this.y = 300;
             this.vy = -BOUNCE * this.vy;
+            //摩擦
+            if(this.vx > 0){
+                this.vx = this.vx - FRICTION
+            }
+            if(this.vx < 0){
+                this.vx = this.vx + FRICTION
+            }
         }
 
         //TODO： 左右越界反弹
@@ -80,6 +94,8 @@ class Body {
             this.x = 0;
             this.vx = -BOUNCE * this.vx;
         }
+        
+        
 
 
         //根据物体位置更新显示对象属性
@@ -102,8 +118,8 @@ rect.color = '#FF0000';
 var body = new Body(rect);
 body.width = rect.width;
 body.height = rect.height;
-body.vx = 25;//需要保证 vx 在 0-50的范围内行为正常
-body.vy = 0;//需要保证 vy 在 0-50的范围内行为正常
+body.vx = 50;//需要保证 vx 在 0-50的范围内行为正常
+body.vy = 50;//需要保证 vy 在 0-50的范围内行为正常
 
 
 var renderCore = new RenderCore();
