@@ -32,14 +32,13 @@ module game {
             context.strokeStyle = '#FF0000';
             context.beginPath();
             for (var i = 0; i < NUM_COLS; i++) {
-                for (var j = 0; j < NUM_ROWS; j++) {
-                    context.rect(i * GRID_PIXEL_WIDTH, j * GRID_PIXEL_HEIGHT, GRID_PIXEL_WIDTH, GRID_PIXEL_HEIGHT);
-                    
-                    
-                    if(this.grid.setWalkable){
+                for (var j = 0; j < NUM_ROWS; j++) {             
+                    if(this.grid.getNode(i,j).walkable){
                         context.fillStyle = '#0000FF'; 
+                        context.rect(i * GRID_PIXEL_WIDTH, j * GRID_PIXEL_HEIGHT, GRID_PIXEL_WIDTH, GRID_PIXEL_HEIGHT);
                     }else{
-                        context.fillStyle = '000000';
+                        context.fillStyle = '#000000';
+                        context.fillRect(i * GRID_PIXEL_WIDTH, j * GRID_PIXEL_HEIGHT, GRID_PIXEL_WIDTH, GRID_PIXEL_HEIGHT);
                     }
                     context.fill();
                     context.stroke();
@@ -62,8 +61,10 @@ module game {
     }
 
     export class BoyBody extends Body {
-
-
+        ArrayX = new Array();
+        ArrayY = new Array();
+        m = 1
+        
         public run(grid) {
             grid.setStartNode(0, 0);
             grid.setEndNode(10, 8);
@@ -71,12 +72,21 @@ module game {
             findpath.setHeurisitic(findpath.diagonal);
             var result = findpath.findPath(grid);
             var path = findpath._path;
+            for (var i = 0; i < path.length; i++) {
+                this.ArrayX[i] = path[i].x;
+                this.ArrayY[i] = path[i].y;
+            }
             console.log(path);
             console.log(grid.toString());
         }
 
         public onTicker(duringTime) {
-
+             if (this.x < NUM_ROWS * GRID_PIXEL_WIDTH && this.y < NUM_COLS * GRID_PIXEL_HEIGHT) {
+                this.x = this.ArrayX[this.m] * GRID_PIXEL_WIDTH;
+                this.y = this.ArrayY[this.m] * GRID_PIXEL_HEIGHT;
+                this.m++;
+                console.log(this.x, this.y);
+            }
         }
     }
 }
