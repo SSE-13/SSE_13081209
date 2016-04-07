@@ -43,7 +43,7 @@ module render {
             else {
                 //TODO:
                 // GLOBAL_MATRIX = PARENT_GLOBAL_MATRIX * LOCAL_MATRIX
-                this.globalMatrix = localMatrix;
+                this.globalMatrix = matrixM(localMatrix, parent.globalMatrix);
             }
 
 
@@ -61,6 +61,22 @@ module render {
         render(context: CanvasRenderingContext2D) {
 
         }
+    }
+    
+    function matrixM(MA: Matrix, MB: Matrix): Matrix {
+        var M = new Matrix();
+
+        M.a = MA.a * MB.a + MA.b * MB.c;
+        M.b = MA.a * MB.b + MA.b * MB.d;
+        M.c = MA.d * MB.c + MA.c * MB.a;
+        M.d = MA.c * MB.b + MA.d * MB.d;
+        M.tx = MA.tx * MB.a + MA.ty * MB.c + MB.tx;
+        M.ty = MA.ty * MB.d + MA.tx * MB.b + MB.ty;
+
+        return M;
+
+
+
     }
 
     export class DisplayObjectContainer extends DisplayObject {
